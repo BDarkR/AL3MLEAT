@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تقرير العمليات - الشفت</title>
+  <link href="./style.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* تعديلات خفيفة خاصة بهذه الصفحة */
+    .section { margin-bottom:18px; border-top:1px dashed rgba(255,255,255,0.03); padding-top:12px; }
+    .row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .row label { min-width:160px; font-size:14px; color:#ddd; }
+    .row .input { flex:1; margin-bottom:0; }
+    .add-btn { background:transparent; color:var(--accent); border:1px dashed rgba(39,174,96,0.35); padding:6px 10px; border-radius:8px; cursor:pointer; }
+    .controls { display:flex; gap:8px; margin-top:10px; }
+    .report-output { width:100%; min-height:220px; resize:vertical; padding:12px; background:#222; color:#ddd; border-radius:8px; border:1px solid rgba(255,255,255,0.03); white-space:pre-wrap; }
+    /* make the select appear like other inputs */
+    select.input { -webkit-appearance:none; -moz-appearance:none; appearance:none; }
+  </style>
+</head>
+<body>
+  <div class="bg-mark"></div>
+
+  <header class="top-nav">
+    <nav>
+      <button class="pill">تقرير العمليات</button>
+    </nav>
+  </header>
+
+  <main class="center-wrap">
+    <section class="card" style="max-width:720px; width:92%;">
+      <h1 id="pageTitle" class="title">تقرير العـــمـــلــيــات الشفت المسائي</h1>
+      <p id="pageSubtitle" class="subtitle">املأ الحقول ثم اضغط "انشاء التقرير"</p>
+
+      <form id="reportForm" onsubmit="return false;">
+        <div class="section">
+          <div class="row">
+            <label>وقت استلام الشفت</label>
+            <select id="shiftSelect" class="input">
+              <option value="evening">6 مساءً</option>
+              <option value="morning">6 صباحاً</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>العمليات (منشن)</label>
+            <input id="operations" class="input" placeholder="@" />
+          </div>
+          <div class="row">
+            <label>نائب العمليات (منشن)</label>
+            <input id="opsDeputy" class="input" placeholder="@" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة العامة</h3>
+          <div class="row">
+            <label>قائد امن المنشأت</label>
+            <input class="input role" data-role="قائد امن المنشأت" placeholder="H-000" value="H-000"/>
+          </div>
+          <div class="row">
+            <label>نائب قائد امن المنشأت</label>
+            <input class="input role" data-role="نائب قائد امن المنشأت" placeholder="H-000" value="H-000"/>
+          </div>
+        </div>
+
+        <div class="section" id="leadershipSection">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة (يمكن إضافة أكثر)</h3>
+          <div id="leadershipList">
+            <div class="row">
+              <label>قيادة 1</label>
+              <input class="input role" data-role="قيادة 1" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>قيادة 2</label>
+              <input class="input role" data-role="قيادة 2" placeholder="H-000" value="H-000"/>
+            </div>
+          </div>
+          <button type="button" class="add-btn" data-target="leadershipList">＋ إضافة قيادة</button>
+
+          <!-- ضابط خفر -->
+          <div style="margin-top:10px;">
+            <div class="row">
+              <label>ضابط خفر</label>
+              <input class="input role" data-role="ضابط خفر" placeholder="H-000" value="H-000"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="unitsSection">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">الوحدات (قابلة للإضافة)</h3>
+
+          <!-- ردع -->
+          <div style="margin-top:6px;">
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ردع (قابل للإضافة)</h4>
+            <div id="radaList">
+              <div class="row"><label>ردع 1</label><input class="input role" data-role="ردع 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ردع 2</label><input class="input role" data-role="ردع 2" placeholder="H-000" value="H-000"/></div>
+            </div>
+            <button type="button" class="add-btn" data-target="radaList">＋ إضافة ردع</button>
+          </div>
+
+          <!-- برق -->
+          <div style="margin-top:12px;">
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">برق (قابل للإضافة)</h4>
+            <div id="barqList">
+              <div class="row"><label>برق 1</label><input class="input role" data-role="برق 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>برق 2</label><input class="input role" data-role="برق 2" placeholder="H-000" value="H-000"/></div>
+            </div>
+            <button type="button" class="add-btn" data-target="barqList">＋ إضافة برق</button>
+          </div>
+
+          <!-- سهم -->
+          <div style="margin-top:12px;">
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">سهم (قابل للإضافة)</h4>
+            <div id="sahmList">
+              <div class="row"><label>سهم 1</label><input class="input role" data-role="سهم 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>سهم 2</label><input class="input role" data-role="سهم 2" placeholder="H-000" value="H-000"/></div>
+            </div>
+            <button type="button" class="add-btn" data-target="sahmList">＋ إضافة سهم</button>
+          </div>
+
+          <!-- ساهر -->
+          <div style="margin-top:12px;">
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ساهر</h4>
+            <div id="saherList">
+              <div class="row"><label>ساهر 1</label><input class="input role" data-role="ساهر 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساهر 2</label><input class="input role" data-role="ساهر 2" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساهر 3</label><input class="input role" data-role="ساهر 3" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساهر 4</label><input class="input role" data-role="ساهر 4" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساهر 5</label><input class="input role" data-role="ساهر 5" placeholder="H-000" value="H-000"/></div>
+            </div>
+            <button type="button" class="add-btn" data-target="saherList">＋ إضافة ساهر</button>
+          </div>
+
+          <!-- صقر -->
+          <div style="margin-top:12px;">
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">صقر (قابل للإضافة)</h4>
+            <div id="saqrList">
+              <div class="row"><label>صقر 1</label><input class="input role" data-role="صقر 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>صقر 2</label><input class="input role" data-role="صقر 2" placeholder="H-000" value="H-000"/></div>
+            </div>
+            <button type="button" class="add-btn" data-target="saqrList">＋ إضافة صقر</button>
+          </div>
+
+          <!-- شرطة عسكرية -->
+          <div style="margin-top:12px;">
+            <div class="row"><label>شرطة عسكرية</label><input class="input role" data-role="شرطة عسكرية" placeholder="H-000" value="H-000"/></div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div id="coastalList">
+              <div class="row"><label>عين 1</label><input class="input role" data-role="عين 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساحل 1</label><input class="input role" data-role="ساحل 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساحل 2</label><input class="input role" data-role="ساحل 2" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>سجن 1</label><input class="input role" data-role="سجن 1" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>سجن 2</label><input class="input role" data-role="سجن 2" placeholder="H-000" value="H-000"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="specialForcesSection">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القوات الخاصة</h3>
+          <div id="specialForcesList">
+            <div class="row">
+              <label>قائد فرقة القوات الخاصة</label>
+              <input class="input role" data-role="قائد فرقة القوات الخاصة" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>نائب الفرقة</label>
+              <input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>حزم 1</label>
+              <input class="input role" data-role="حزم 1" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>رمح 1</label>
+              <input class="input role" data-role="رمح 1" placeholder="H-000" value="H-000"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="criminalSection">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">البحث الجنائي</h3>
+          <div id="criminalList">
+            <div class="row">
+              <label>قائد فرقة البحث الجنائي</label>
+              <input class="input role" data-role="قائد فرقة البحث الجنائي" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>نائب الفرقة</label>
+              <input class="input role" data-role="نائب فرقة البحث الجنائي" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>جنائي 1</label>
+              <input class="input role" data-role="جنائي 1" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>جنائي 2</label>
+              <input class="input role" data-role="جنائي 2" placeholder="H-000" value="H-000"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="securitySection">
+          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">الأمن والحماية</h3>
+          <div id="securityList">
+            <div class="row">
+              <label>حماية 1</label>
+              <input class="input role" data-role="حماية 1" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>حماية 2</label>
+              <input class="input role" data-role="حماية 2" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>حماية 3</label>
+              <input class="input role" data-role="حماية 3" placeholder="H-000" value="H-000"/>
+            </div>
+            <div class="row">
+              <label>حماية 4</label>
+              <input class="input role" data-role="حماية 4" placeholder="H-000" value="H-000"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button type="button" id="buildReport" class="btn primary" style="flex:1">انشاء التقرير</button>
+          <button type="button" id="copyReport" class="btn secondary" style="width:150px;display:none">نسخ التقرير</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <textarea id="reportOutput" class="report-output" placeholder="سيظهر التقرير هنا بعد الضغط"></textarea>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // إضافة صف جديد ديناميكياً لقوائم قابلة للإضافة
+    document.querySelectorAll('.add-btn').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const list = document.getElementById(targetId);
+        if (!list) return;
+        const existing = list.querySelectorAll('.row').length;
+        const index = existing + 1;
+        let baseName = '';
+        const firstLabel = list.querySelector('.row label');
+        if (firstLabel) {
+          baseName = firstLabel.textContent.split(' ')[0] || 'عنصر';
+        } else {
+          baseName = 'عنصر';
+        }
+        const labelText = baseName + ' ' + index;
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = '<label>' + labelText + '</label>' +
+                        '<input class="input role" data-role="' + labelText + '" placeholder="H-000" value="H-000"/>';
+        list.appendChild(row);
+      });
+    });
+
+    // تجمع كل العناصر داخل container متتابعين بدون سطر فارغ بينهم،
+    // ثم تضيف سطر فارغ واحد بعد انتهاء كامل المجموعة (إن addBlankAfter = true)
+    function appendFromContainer(containerId, out, addBlankAfter = true) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const inputs = container.querySelectorAll('.role');
+      inputs.forEach(inp => {
+        const roleName = inp.getAttribute('data-role') || '';
+        const val = (inp.value && inp.value.trim()) ? inp.value.trim() : 'H-000';
+        if (roleName) {
+          out.push(roleName + ' : ' + val);
+        }
+      });
+      if (addBlankAfter) out.push('');
+    }
+
+    // تحديث عنوان الصفحة ونص الاستلام حسب اختيار الشفت
+    const shiftSelect = document.getElementById('shiftSelect');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSubtitle = document.getElementById('pageSubtitle');
+
+    function updateTitleByShift() {
+      const val = shiftSelect.value;
+      if (val === 'morning') {
+        pageTitle.textContent = 'تقرير العـــمـــلــيــات الشفت الصباحي';
+        pageSubtitle.textContent = 'املأ الحقول ثم اضغط "انشاء التقرير"';
+      } else {
+        pageTitle.textContent = 'تقرير العـــمـــلــيــات الشفت المسائي';
+        pageSubtitle.textContent = 'املأ الحقول ثم اضغط "انشاء التقرير"';
+      }
+    }
+    shiftSelect.addEventListener('change', updateTitleByShift);
+
+    // تأكد من العنوان عند تحميل الصفحة
+    updateTitleByShift();
+
+    // بناء التقرير بترتيب مطابق للمثال، مع عدم وجود مسافة بين عناصر نفس الفئة
+    function buildReportText() {
+      const out = [];
+      const shiftVal = shiftSelect.value; // 'evening' or 'morning'
+      const shiftLabel = (shiftVal === 'morning') ? 'الشفت الصباحي' : 'الشفت المسائي';
+      const timeLabel = (shiftVal === 'morning') ? '6 صباحاً' : '6 مساءً';
+
+      out.push('تقرير العـــمـــلــيــات ' + shiftLabel);
+      out.push('');
+      out.push('تم استلام عمليات ' + shiftLabel + ' في تمام الساعه ' + timeLabel);
+      out.push('');
+
+      // العمليات و نائب العمليات: اجعلها منشن (@) افتراضياً
+      const rawOps = (document.getElementById('operations').value || '').trim();
+      const rawOpsDeputy = (document.getElementById('opsDeputy').value || '').trim();
+      const operations = rawOps ? (rawOps.startsWith('@') ? rawOps : ('@' + rawOps)) : '@';
+      const opsDeputy = rawOpsDeputy ? (rawOpsDeputy.startsWith('@') ? rawOpsDeputy : ('@' + rawOpsDeputy)) : '@';
+
+      out.push('العمليات : ' + operations);
+      out.push('');
+      out.push('نائب العمليات : ' + opsDeputy);
+      out.push('');
+
+      // الآن الترتيب كما اتفقنا: قائد/nائب -> قيادة -> ضابط خفر -> ردع -> برق -> سهم -> ساهر -> صقر -> شرطة عسكرية -> القوات الخاصة -> البحث الجنائي -> حماية -> عين/ساحل/سجن
+
+      // 1) القيادة العامة (قائد، نائب) - نجمع عبر البحث المباشر
+      const leaderElems = [
+        document.querySelector('input[data-role="قائد امن المنشأت"]'),
+        document.querySelector('input[data-role="نائب قائد امن المنشأت"]')
+      ];
+      leaderElems.forEach(el => {
+        if (el) {
+          const roleName = el.getAttribute('data-role') || '';
+          const val = (el.value && el.value.trim()) ? el.value.trim() : 'H-000';
+          if (roleName) out.push(roleName + ' : ' + val);
+        }
+      });
+      out.push('');
+
+      // 2) القيادة (مجموعة)
+      appendFromContainer('leadershipList', out);
+
+      // 3) ضابط خفر
+      const dh = document.querySelector('input[data-role="ضابط خفر"]');
+      if (dh) {
+        const val = (dh.value && dh.value.trim()) ? dh.value.trim() : 'H-000';
+        out.push(dh.getAttribute('data-role') + ' : ' + val);
+        out.push('');
+      }
+
+      // 4) ردع
+      appendFromContainer('radaList', out);
+
+      // 5) برق
+      appendFromContainer('barqList', out);
+
+      // 6) سهم
+      appendFromContainer('sahmList', out);
+
+      // 7) ساهر
+      appendFromContainer('saherList', out);
+
+      // 8) صقر
+      appendFromContainer('saqrList', out);
+
+      // 9) شرطة عسكرية (مفرد)
+      const police = document.querySelector('input[data-role="شرطة عسكرية"]');
+      if (police) {
+        const val = (police.value && police.value.trim()) ? police.value.trim() : 'H-000';
+        out.push(police.getAttribute('data-role') + ' : ' + val);
+        out.push('');
+      }
+
+      // 10) القوات الخاصة (كـ مجموعة)
+      appendFromContainer('specialForcesList', out);
+
+      // 11) البحث الجنائي (كـ مجموعة)
+      appendFromContainer('criminalList', out);
+
+      // 12) الأمن والحماية (كـ مجموعة)
+      appendFromContainer('securityList', out);
+
+      // 13) عين/ساحل/سجن (قائمة واحدة)
+      appendFromContainer('coastalList', out, false);
+      out.push('');
+
+      // أزل أي سطر فارغ زائد في النهاية
+      while (out.length && out[out.length - 1] === '') out.pop();
+
+      return out.join('\n');
+    }
+
+    const buildBtn = document.getElementById('buildReport');
+    const copyBtn = document.getElementById('copyReport');
+    const output = document.getElementById('reportOutput');
+
+    buildBtn.addEventListener('click', () => {
+      const text = buildReportText();
+      output.value = text;
+      copyBtn.style.display = 'inline-block';
+      output.focus();
+      output.select();
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!output.value) return alert('لا يوجد تقرير لنسخه');
+      try {
+        await navigator.clipboard.writeText(output.value);
+        copyBtn.textContent = 'تم النسخ ✓';
+        setTimeout(() => copyBtn.textContent = 'نسخ التقرير', 1500);
+      } catch (e) {
+        alert('فشل النسخ — جرّب يدوياً');
+      }
+    });
+  </script>
+</body>
+</html>
