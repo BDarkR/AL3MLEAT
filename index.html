@@ -15,10 +15,6 @@
     .add-btn { background:transparent; color:var(--accent); border:1px dashed rgba(39,174,96,0.35); padding:6px 10px; border-radius:8px; cursor:pointer; }
     .controls { display:flex; gap:8px; margin-top:10px; }
     .report-output { width:100%; min-height:220px; resize:vertical; padding:12px; background:#222; color:#ddd; border-radius:8px; border:1px solid rgba(255,255,255,0.03); white-space:pre-wrap; }
-    /* make the select appear like other inputs */
-    select.input { -webkit-appearance:none; -moz-appearance:none; appearance:none; }
-
-    /* delete button for dynamically added rows */
     .del-btn {
       background:transparent;
       border:1px solid rgba(255,255,255,0.06);
@@ -28,8 +24,6 @@
       cursor:pointer;
       font-weight:700;
     }
-
-    /* duplicate highlighting */
     .role.duplicate {
       border-color: #e74c3c !important;
       color: #ffb3b3 !important;
@@ -38,11 +32,8 @@
     .row label.duplicate-label {
       color:#ff6b6b !important;
     }
-
-    /* warning text */
     #dupWarning { color:#ff6b6b; display:none; margin-top:8px; font-size:13px; }
 
-    /* player (لاعب معتمد) small controls */
     .player-wrap { display:flex; gap:6px; align-items:center; }
     .playerChk { width:18px; height:18px; }
     .playerMention { width:160px; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.04); background:#222; color:#ddd; display:none; font-size:13px; }
@@ -60,18 +51,17 @@
 
   <main class="center-wrap">
     <section class="card" style="max-width:820px; width:96%;">
-      <h1 id="pageTitle" class="title">تقرير العـــمـــلــيــات الشفت المسائي</h1>
+      <h1 id="pageTitle" class="title">تقرير العـــمـــلــيــات الشفت الصباحي</h1>
       <p id="pageSubtitle" class="subtitle">املأ الحقول ثم اضغط "انشاء التقرير"</p>
 
       <form id="reportForm" onsubmit="return false;">
         <div class="section">
+          <!-- وقت الاستلام ثابت على 6 صباحاً -->
           <div class="row">
             <label>وقت استلام الشفت</label>
-            <select id="shiftSelect" class="input">
-              <option value="evening">6 مساءً</option>
-              <option value="morning">6 صباحاً</option>
-            </select>
+            <input id="shiftTimeDisplay" class="input" value="6 صباحاً" readonly />
           </div>
+
           <div class="row">
             <label>العمليات (منشن)</label>
             <input id="operations" class="input" placeholder="@" />
@@ -85,13 +75,13 @@
         <div class="section">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة العامة</h3>
 
-          <!-- قائد امن المنشأت (حُذف منه خيار "لاعب معتمد") -->
+          <!-- قائد امن المنشأت (خالي من خيار اللاعب) -->
           <div class="row">
             <label>قائد امن المنشأت</label>
             <input class="input role" data-role="قائد امن المنشأت" placeholder="H-000" value="H-000"/>
           </div>
 
-          <!-- نائب قائد امن المنشأت (حُذف منه خيار "لاعب معتمد") -->
+          <!-- نائب قائد امن المنشأت (خالي من خيار اللاعب) -->
           <div class="row">
             <label>نائب قائد امن المنشأت</label>
             <input class="input role" data-role="نائب قائد امن المنشأت" placeholder="H-000" value="H-000"/>
@@ -101,7 +91,6 @@
         <div class="section" id="leadershipSection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة (يمكن إضافة أكثر)</h3>
           <div id="leadershipList">
-            <!-- إزالة خيار اللاعب من عناصر القيادة الافتراضية -->
             <div class="row">
               <label>قيادة 1</label>
               <input class="input role" data-role="قيادة 1" placeholder="H-000" value="H-000"/>
@@ -113,7 +102,7 @@
           </div>
           <button type="button" class="add-btn" data-target="leadershipList">＋ إضافة قيادة</button>
 
-          <!-- ضابط خفر (ما زال لديه خيار اللاعب) -->
+          <!-- ضابط خفر يحتفظ بخيار اللاعب -->
           <div style="margin-top:10px;">
             <div class="row">
               <label>ضابط خفر</label>
@@ -130,7 +119,6 @@
         <div class="section" id="unitsSection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">الوحدات (قابلة للإضافة)</h3>
 
-          <!-- ردع -->
           <div style="margin-top:6px;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ردع (قابل للإضافة)</h4>
             <div id="radaList">
@@ -154,7 +142,6 @@
             <button type="button" class="add-btn" data-target="radaList">＋ إضافة ردع</button>
           </div>
 
-          <!-- برق -->
           <div style="margin-top:12px;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">برق (قابل للإضافة)</h4>
             <div id="barqList">
@@ -178,7 +165,6 @@
             <button type="button" class="add-btn" data-target="barqList">＋ إضافة برق</button>
           </div>
 
-          <!-- سهم (بلا زر إضافة كما طلبت) -->
           <div style="margin-top:12px;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">سهم</h4>
             <div id="sahmList">
@@ -199,11 +185,9 @@
                 </div>
               </div>
             </div>
-            <!-- زر الإضافة لسهم تمت إزالته حسب طلبك -->
           </div>
 
-          <!-- ساهر -->
-          <div style="margin-top:12px;">
+          <div style="margin:12px 0;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ساهر</h4>
             <div id="saherList">
               <div class="row"><label>ساهر 1</label>
@@ -250,7 +234,6 @@
             <button type="button" class="add-btn" data-target="saherList">＋ إضافة ساهر</button>
           </div>
 
-          <!-- صقر -->
           <div style="margin:12px 0;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">صقر (قابل للإضافة)</h4>
             <div id="saqrList">
@@ -274,7 +257,6 @@
             <button type="button" class="add-btn" data-target="saqrList">＋ إضافة صقر</button>
           </div>
 
-          <!-- شرطة عسكرية -->
           <div style="margin-top:12px;">
             <div class="row"><label>شرطة عسكرية</label>
               <input class="input role" data-role="شرطة عسكرية" placeholder="H-000" value="H-000"/>
@@ -479,25 +461,20 @@
       const mention = row.querySelector('.playerMention');
       const codeInput = row.querySelector('.role');
       if (!chk || !mention) return;
-      // toggle display and clear highlight on toggle
       chk.addEventListener('change', () => {
         if (chk.checked) {
           mention.style.display = 'inline-block';
-          // optional: clear code input duplicate class for this row while player is on
           codeInput.classList.remove('duplicate');
           const lbl = row.querySelector('label');
           if (lbl) lbl.classList.remove('duplicate-label');
         } else {
           mention.style.display = 'none';
         }
-        // immediate duplicate re-check
         checkDuplicates();
       });
-      // also clicking mention input should trigger duplicate checks when typed
       mention.addEventListener('input', checkDuplicates);
     }
 
-    // attach role listener (for duplicate detection) to a code input
     function attachRoleListener(input) {
       if (!input) return;
       if (input.dataset.listenerAttached === '1') return;
@@ -505,15 +482,13 @@
       input.dataset.listenerAttached = '1';
     }
 
-    // attach toggle listeners to all existing rows (bind only if row contains player controls)
+    // attach listeners to existing rows (bind player only where exists)
     document.querySelectorAll('.row').forEach(row => {
       const roleInp = row.querySelector('.role');
       if (roleInp) attachRoleListener(roleInp);
-      // bind player toggle only when the controls exist in the row
       bindPlayerToggle(row);
     });
 
-    // create dynamic row with delete; optionally include player controls depending on targetId
     function createRow(labelText, dataRole, targetId) {
       const row = document.createElement('div');
       row.className = 'row';
@@ -527,7 +502,7 @@
       input.placeholder = 'H-000';
       input.value = 'H-000';
 
-      // decide whether to include player controls: leadershipList and the two top leaders should NOT have player
+      // leadershipList and top leaders should NOT have player controls
       const includePlayer = !(targetId === 'leadershipList' || dataRole === 'قائد امن المنشأت' || dataRole === 'نائب قائد امن المنشأت');
 
       let playerWrap = null;
@@ -569,7 +544,6 @@
       return row;
     }
 
-    // add-btn behavior: append new row with delete (pass targetId to createRow)
     document.querySelectorAll('.add-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.getAttribute('data-target');
@@ -577,7 +551,6 @@
         if (!list) return;
         const existing = list.querySelectorAll('.row').length;
         const index = existing + 1;
-        // determine baseName from first label or data-target
         let baseName = '';
         const firstLabel = list.querySelector('.row label');
         if (firstLabel) baseName = firstLabel.textContent.split(' ')[0] || 'عنصر';
@@ -585,16 +558,10 @@
         const labelText = baseName + ' ' + index;
         const newRow = createRow(labelText, labelText, targetId);
         list.appendChild(newRow);
-        // re-run duplicate check
         checkDuplicates();
       });
     });
 
-    // duplicate detection:
-    // - ignore default placeholder 'H-000'
-    // - ignore empty values
-    // - ignore values that start with '@' (mentions)
-    // - ignore rows where playerChk is checked (we treat mention values separately)
     function checkDuplicates() {
       const inputs = Array.from(document.querySelectorAll('.role'));
       const map = new Map();
@@ -602,20 +569,13 @@
       inputs.forEach(inp => {
         const row = inp.closest('.row');
         const playerChk = row ? row.querySelector('.playerChk') : null;
-        const mention = row ? row.querySelector('.playerMention') : null;
-
-        // If this row is marked as player AND mention exists, skip this code for duplicate logic
         if (playerChk && playerChk.checked) return;
-
         const v = (inp.value || '').trim().toUpperCase();
-        // ignore default placeholder and empty and mentions
         if (!v || v === 'H-000' || v.startsWith('@')) return;
-
         if (!map.has(v)) map.set(v, []);
         map.get(v).push({ inp, row });
       });
 
-      // clear previous marks
       document.querySelectorAll('.role').forEach(inp => {
         inp.classList.remove('duplicate');
         const lbl = inp.parentElement.querySelector('label');
@@ -623,7 +583,6 @@
       });
       document.getElementById('dupWarning').style.display = 'none';
 
-      // mark duplicates (count > 1)
       let dupFound = false;
       map.forEach((arr, key) => {
         if (arr.length > 1) {
@@ -641,7 +600,6 @@
       }
     }
 
-    // whenever new role inputs are added dynamically, attach listener for duplicate check
     const observer = new MutationObserver(muts => {
       muts.forEach(m => {
         m.addedNodes.forEach(node => {
@@ -655,8 +613,6 @@
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // collects values from a container's rows: if player checkbox checked => use mention (with @),
-    // otherwise use code input (H-000 or user code)
     function appendFromContainer(containerId, out, addBlankAfter = true) {
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -671,7 +627,7 @@
         if (playerChk && playerChk.checked) {
           const raw = (mention && mention.value) ? mention.value.trim() : '';
           if (raw) val = raw.startsWith('@') ? raw : ('@' + raw);
-          else val = '@'; // if marked player but no mention provided
+          else val = '@';
         } else if (codeInput) {
           val = (codeInput.value && codeInput.value.trim()) ? codeInput.value.trim() : 'H-000';
         }
@@ -683,33 +639,13 @@
       if (addBlankAfter) out.push('');
     }
 
-    // update title by shift select
-    const shiftSelect = document.getElementById('shiftSelect');
-    const pageTitle = document.getElementById('pageTitle');
-    const pageSubtitle = document.getElementById('pageSubtitle');
-
-    function updateTitleByShift() {
-      const val = shiftSelect.value;
-      if (val === 'morning') {
-        pageTitle.textContent = 'تقرير العـــمـــلــيــات الشفت الصباحي';
-        pageSubtitle.textContent = 'املأ الحقول ثم اضغط "انشاء التقرير"';
-      } else {
-        pageTitle.textContent = 'تقرير العـــمـــلــيــات الشفت المسائي';
-        pageSubtitle.textContent = 'املأ الحقول ثم اضغط "انشاء التقرير"';
-      }
-    }
-    shiftSelect.addEventListener('change', updateTitleByShift);
-    updateTitleByShift();
-
-    // build report content, operations and deputy become mentions (add @ if missing)
+    // build report: fixed to morning 6 صباحاً
     function buildReportText() {
-      // run duplicate check so user sees red highlights
       checkDuplicates();
 
       const out = [];
-      const shiftVal = shiftSelect.value; // 'evening' or 'morning'
-      const shiftLabel = (shiftVal === 'morning') ? 'الشفت الصباحي' : 'الشفت المسائي';
-      const timeLabel = (shiftVal === 'morning') ? '6 صباحاً' : '6 مساءً';
+      const shiftLabel = 'الشفت الصباحي';
+      const timeLabel = '6 صباحاً';
 
       out.push('تقرير العـــمـــلــيــات ' + shiftLabel);
       out.push('');
@@ -726,7 +662,7 @@
       out.push('نائب العمليات : ' + opsDeputy);
       out.push('');
 
-      // collect leader fields (now without player option)
+      // leaders (no player option here)
       const leaderElems = [
         document.querySelector('input[data-role="قائد امن المنشأت"]'),
         document.querySelector('input[data-role="نائب قائد امن المنشأت"]')
@@ -739,9 +675,8 @@
       });
       out.push('');
 
-      // other groups in the agreed order
       appendFromContainer('leadershipList', out);
-      // ضابط خفر
+
       const dh = document.querySelector('input[data-role="ضابط خفر"]');
       if (dh) {
         const row = dh.closest('.row');
@@ -764,7 +699,6 @@
       appendFromContainer('saherList', out);
       appendFromContainer('saqrList', out);
 
-      // شرطة عسكرية
       const police = document.querySelector('input[data-role="شرطة عسكرية"]');
       if (police) {
         const row = police.closest('.row');
@@ -787,13 +721,10 @@
       appendFromContainer('coastalList', out, false);
       out.push('');
 
-      // trim trailing blank lines
       while (out.length && out[out.length - 1] === '') out.pop();
-
       return out.join('\n');
     }
 
-    // wire build/copy buttons
     const buildBtn = document.getElementById('buildReport');
     const copyBtn = document.getElementById('copyReport');
     const output = document.getElementById('reportOutput');
