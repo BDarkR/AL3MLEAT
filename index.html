@@ -17,7 +17,7 @@
     .row .input { flex:1; margin-bottom:0; }
     .add-btn { background:transparent; color:var(--accent); border:1px dashed rgba(39,174,96,0.35); padding:6px 10px; border-radius:8px; cursor:pointer; }
     .controls { display:flex; gap:8px; margin-top:10px; }
-    .report-output { width:100%; min-height:220px; resize:vertical; padding:12px; background:#222; color:#ddd; border-radius:8px; border:1px solid rgba(255,255,255,0.03); white-space:pre-wrap; }
+    .report-output { width:100%; min-height:220px; resize:vertical; padding:12px; background:#222; color:#ddd; border-radius:8px; border:1px solid rgba(255,255,255,0.03); white-space:pre-wrap; direction:rtl; }
     .del-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#ff6b6b; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; }
     .role.duplicate { border-color:#e74c3c !important; color:#ffb3b3 !important; background:rgba(231,76,60,0.04); }
     .row label.duplicate-label { color:#ff6b6b !important; }
@@ -76,13 +76,11 @@
         <div class="section">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة العامة</h3>
 
-          <!-- قائد امن المنشأت (خالي من خيار اللاعب) -->
           <div class="row">
             <label>قائد امن المنشأت</label>
             <input class="input role" data-role="قائد امن المنشأت" placeholder="H-000" value="H-000"/>
           </div>
 
-          <!-- نائب قائد امن المنشأت (خالي من خيار اللاعب) -->
           <div class="row">
             <label>نائب قائد امن المنشأت</label>
             <input class="input role" data-role="نائب قائد امن المنشأت" placeholder="H-000" value="H-000"/>
@@ -92,18 +90,11 @@
         <div class="section" id="leadershipSection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القيادة (يمكن إضافة أكثر)</h3>
           <div id="leadershipList">
-            <div class="row">
-              <label>قيادة 1</label>
-              <input class="input role" data-role="قيادة 1" placeholder="H-000" value="H-000"/>
-            </div>
-            <div class="row">
-              <label>قيادة 2</label>
-              <input class="input role" data-role="قيادة 2" placeholder="H-000" value="H-000"/>
-            </div>
+            <div class="row"><label>قيادة 1</label><input class="input role" data-role="قيادة 1" placeholder="H-000" value="H-000"/></div>
+            <div class="row"><label>قيادة 2</label><input class="input role" data-role="قيادة 2" placeholder="H-000" value="H-000"/></div>
           </div>
           <button type="button" class="add-btn" data-target="leadershipList">＋ إضافة قيادة</button>
 
-          <!-- ضابط خفر يحتفظ بخيار اللاعب -->
           <div style="margin-top:10px;">
             <div class="row">
               <label>ضابط خفر</label>
@@ -189,13 +180,13 @@
           </div>
 
           <div style="margin:12px 0;">
-            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ساهر</h4>
+            <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">ساهر <span style="color:#9b9b9b;font-size:13px;margin-left:8px">(قابلة للإضافة)</span></h4>
             <div id="saherList">
-              <div class="row"><label>ساهر 1</label><input class="input role" data-role="ساهر 1" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساهر 2</label><input class="input role" data-role="ساهر 2" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساهر 3</label><input class="input role" data-role="ساهر 3" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساهر 4</label><input class="input role" data-role="ساهر 4" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساهر 5</label><input class="input role" data-role="ساهر 5" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>ساهر 1</label><input class="input role" data-role="ساهر 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساهر 2</label><input class="input role" data-role="ساهر 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساهر 3</label><input class="input role" data-role="ساهر 3" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساهر 4</label><input class="input role" data-role="ساهر 4" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساهر 5</label><input class="input role" data-role="ساهر 5" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
             </div>
             <button type="button" class="add-btn" data-target="saherList">＋ إضافة ساهر</button>
           </div>
@@ -203,8 +194,8 @@
           <div style="margin:12px 0;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">صقر (قابل للإضافة)</h4>
             <div id="saqrList">
-              <div class="row"><label>صقر 1</label><input class="input role" data-role="صقر 1" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>صقر 2</label><input class="input role" data-role="صقر 2" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>صقر 1</label><input class="input role" data-role="صقر 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>صقر 2</label><input class="input role" data-role="صقر 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
             </div>
             <button type="button" class="add-btn" data-target="saqrList">＋ إضافة صقر</button>
           </div>
@@ -215,45 +206,42 @@
 
           <div style="margin-top:12px;">
             <div id="coastalList">
-              <div class="row"><label>عين 1</label><input class="input role" data-role="عين 1" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساحل 1</label><input class="input role" data-role="ساحل 1" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>ساحل 2</label><input class="input role" data-role="ساحل 2" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>سجن 1</label><input class="input role" data-role="سجن 1" placeholder="H-000" value="H-000"/></div>
-              <div class="row"><label>سجن 2</label><input class="input role" data-role="سجن 2" placeholder="H-000" value="H-000"/></div>
+              <div class="row"><label>عين 1</label><input class="input role" data-role="عين 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساحل 1</label><input class="input role" data-role="ساحل 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>ساحل 2</label><input class="input role" data-role="ساحل 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>سجن 1</label><input class="input role" data-role="سجن 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+              <div class="row"><label>سجن 2</label><input class="input role" data-role="سجن 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
             </div>
           </div>
         </div>
 
-        <!-- القوات الخاصة -->
         <div class="section" id="specialForcesSection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القوات الخاصة</h3>
           <div id="specialForcesList">
-            <div class="row"><label>قائد فرقة القوات الخاصة</label><input class="input role" data-role="قائد فرقة القوات الخاصة" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>نائب الفرقة</label><input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>حزم 1</label><input class="input role" data-role="حزم 1" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>رمح 1</label><input class="input role" data-role="رمح 1" placeholder="H-000" value="H-000"/></div>
+            <div class="row"><label>قائد فرقة القوات الخاصة</label><input class="input role" data-role="قائد فرقة القوات الخاصة" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>نائب الفرقة</label><input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>حزم 1</label><input class="input role" data-role="حزم 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>رمح 1</label><input class="input role" data-role="رمح 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
           </div>
         </div>
 
-        <!-- البحث الجنائي -->
         <div class="section" id="criminalSection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">البحث الجنائي</h3>
           <div id="criminalList">
-            <div class="row"><label>قائد فرقة البحث الجنائي</label><input class="input role" data-role="قائد فرقة البحث الجنائي" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>نائب الفرقة</label><input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>جنائي 1</label><input class="input role" data-role="جنائي 1" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>جنائي 2</label><input class="input role" data-role="جنائي 2" placeholder="H-000" value="H-000"/></div>
+            <div class="row"><label>قائد فرقة البحث الجنائي</label><input class="input role" data-role="قائد فرقة البحث الجنائي" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>نائب الفرقة</label><input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>جنائي 1</label><input class="input role" data-role="جنائي 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>جنائي 2</label><input class="input role" data-role="جنائي 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
           </div>
         </div>
 
-        <!-- الأمن والحماية -->
         <div class="section" id="securitySection">
           <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">الأمن والحماية</h3>
           <div id="securityList">
-            <div class="row"><label>حماية 1</label><input class="input role" data-role="حماية 1" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>حماية 2</label><input class="input role" data-role="حماية 2" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>حماية 3</label><input class="input role" data-role="حماية 3" placeholder="H-000" value="H-000"/></div>
-            <div class="row"><label>حماية 4</label><input class="input role" data-role="حماية 4" placeholder="H-000" value="H-000"/></div>
+            <div class="row"><label>حماية 1</label><input class="input role" data-role="حماية 1" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>حماية 2</label><input class="input role" data-role="حماية 2" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>حماية 3</label><input class="input role" data-role="حماية 3" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
+            <div class="row"><label>حماية 4</label><input class="input role" data-role="حماية 4" placeholder="H-000" value="H-000"/><div class="player-wrap"><input type="checkbox" class="playerChk" title="لاعب معتمد"><span class="playerLabel">لاعب</span><input class="playerMention" placeholder="@player" /></div></div>
           </div>
         </div>
 
@@ -427,7 +415,68 @@
       if (addBlankAfter) out.push('');
     }
 
-    // build report: follow exactly the order the user requested
+    // special handler for coastal group to add blank lines between عين / ساحل / سجن
+    function appendCoastalWithGaps(out) {
+      const container = document.getElementById('coastalList');
+      if (!container) return;
+      const rows = Array.from(container.querySelectorAll('.row'));
+      const ayn = rows.filter(r => (r.querySelector('label')||{}).textContent.trim().startsWith('عين'));
+      const sah = rows.filter(r => (r.querySelector('label')||{}).textContent.trim().startsWith('ساحل'));
+      const sijn = rows.filter(r => (r.querySelector('label')||{}).textContent.trim().startsWith('سجن'));
+
+      // عين (then blank line)
+      ayn.forEach(row => {
+        const roleName = (row.querySelector('label')||{}).textContent || '';
+        const codeInput = row.querySelector('.role');
+        const playerChk = row.querySelector('.playerChk');
+        const mention = row.querySelector('.playerMention');
+        let val = 'H-000';
+        if (playerChk && playerChk.checked) {
+          const raw = (mention && mention.value) ? mention.value.trim() : '';
+          val = raw ? (raw.startsWith('@') ? raw : ('@' + raw)) : '@';
+        } else if (codeInput) {
+          val = (codeInput.value && codeInput.value.trim()) ? codeInput.value.trim() : 'H-000';
+        }
+        out.push(roleName + ' : ' + val);
+      });
+      if (ayn.length) out.push(''); // gap after عين
+
+      // ساحل (then blank line)
+      sah.forEach(row => {
+        const roleName = (row.querySelector('label')||{}).textContent || '';
+        const codeInput = row.querySelector('.role');
+        const playerChk = row.querySelector('.playerChk');
+        const mention = row.querySelector('.playerMention');
+        let val = 'H-000';
+        if (playerChk && playerChk.checked) {
+          const raw = (mention && mention.value) ? mention.value.trim() : '';
+          val = raw ? (raw.startsWith('@') ? raw : ('@' + raw)) : '@';
+        } else if (codeInput) {
+          val = (codeInput.value && codeInput.value.trim()) ? codeInput.value.trim() : 'H-000';
+        }
+        out.push(roleName + ' : ' + val);
+      });
+      if (sah.length) out.push(''); // gap after ساحل
+
+      // سجن
+      sijn.forEach(row => {
+        const roleName = (row.querySelector('label')||{}).textContent || '';
+        const codeInput = row.querySelector('.role');
+        const playerChk = row.querySelector('.playerChk');
+        const mention = row.querySelector('.playerMention');
+        let val = 'H-000';
+        if (playerChk && playerChk.checked) {
+          const raw = (mention && mention.value) ? mention.value.trim() : '';
+          val = raw ? (raw.startsWith('@') ? raw : ('@' + raw)) : '@';
+        } else if (codeInput) {
+          val = (codeInput.value && codeInput.value.trim()) ? codeInput.value.trim() : 'H-000';
+        }
+        out.push(roleName + ' : ' + val);
+      });
+      // no forced blank after final group here
+    }
+
+    // build report: follow exactly the requested order and include coastal gaps
     function buildReportText() {
       checkDuplicates();
       const out = [];
@@ -456,7 +505,7 @@
       if (leader2) out.push(leader2.getAttribute('data-role') + ' : ' + ((leader2.value && leader2.value.trim()) ? leader2.value.trim() : 'H-000'));
       out.push('');
 
-      // قيادة 1/2
+      // قيادة 1/2 (each on own line)
       appendFromContainer('leadershipList', out);
 
       // ضابط خفر
@@ -483,7 +532,7 @@
       // سهم
       appendFromContainer('sahmList', out);
 
-      // ساهر 1..5 (ensure order)
+      // ساهر 1..5
       appendFromContainer('saherList', out);
 
       // صقر 1..2
@@ -504,17 +553,20 @@
         out.push('');
       }
 
-      // القوات الخاصة (in the exact order)
+      // القوات الخاصة
+      out.push('القوات الخاصة');
       appendFromContainer('specialForcesList', out);
 
       // البحث الجنائي
+      out.push('البحث الجنائي');
       appendFromContainer('criminalList', out);
 
-      // الأمن والحماية (حماية 1..4)
+      // الأمن والحماية
+      out.push('الأمن والحماية');
       appendFromContainer('securityList', out);
 
-      // عين 1 / ساحل 1 / ساحل 2 / سجن 1 / سجن 2
-      appendFromContainer('coastalList', out, false);
+      // coastal: عين / ساحل / سجن with gaps between groups
+      appendCoastalWithGaps(out);
 
       // trim trailing blank lines
       while (out.length && out[out.length - 1] === '') out.pop();
