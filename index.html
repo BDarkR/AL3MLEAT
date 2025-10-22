@@ -7,6 +7,10 @@
   <link href="./style.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    :root{ --accent:#27ae60; --muted:#9b9b9b; }
+    body{font-family:'Cairo',system-ui,Arial,sans-serif;background:#0b0b0b;color:#eee}
+    .card{background:linear-gradient(#1a1a1a,#212121);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.6);}
+
     /* تعديلات خفيفة خاصة بهذه الصفحة */
     .section { margin-bottom:18px; border-top:1px dashed rgba(255,255,255,0.03); padding-top:12px; }
     .row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
@@ -29,9 +33,7 @@
       color: #ffb3b3 !important;
       background: rgba(231,76,60,0.04);
     }
-    .row label.duplicate-label {
-      color:#ff6b6b !important;
-    }
+    .row label.duplicate-label { color:#ff6b6b !important; }
     #dupWarning { color:#ff6b6b; display:none; margin-top:8px; font-size:13px; }
 
     .player-wrap { display:flex; gap:6px; align-items:center; }
@@ -39,31 +41,45 @@
     .playerMention { width:160px; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.04); background:#222; color:#ddd; display:none; font-size:13px; }
     .playerLabel { font-size:13px; color:#bbb; }
 
-    /* زر العودة */
+    /* زر العودة و زر العنوان: نفس الستايل والحجم كما طلبت */
     .top-nav { padding:12px 18px; }
-    .top-nav nav { display:flex; gap:10px; align-items:center; justify-content:flex-start; }
-    .pill {
-      background:transparent;
-      color:var(--accent, #27ae60);
-      border:1px solid rgba(39,174,96,0.18);
-      padding:8px 12px;
-      border-radius:10px;
-      cursor:default;
-      font-weight:700;
-    }
-    .back-link {
+    .top-nav nav { display:flex; gap:8px; align-items:center; justify-content:flex-start; flex-wrap:wrap; }
+
+    /* unified button size to match the reports buttons in the screenshot */
+    .btn-pill {
       display:inline-flex;
       align-items:center;
-      gap:6px;
+      justify-content:center;
+      gap:8px;
       text-decoration:none;
-      background:#27ae60;
-      color:#fff;
-      padding:8px 12px;
-      border-radius:10px;
+      padding:6px 14px;           /* compact padding to match screenshot */
+      height:34px;                /* fixed height so both look identical */
+      line-height:1;
+      font-size:14px;
+      border-radius:18px;
       font-weight:700;
-      border:1px solid rgba(0,0,0,0.06);
+      border:1px solid transparent;
+      cursor:pointer;
+      white-space:nowrap;
     }
-    .back-link:hover { opacity:0.95; }
+
+    /* outline variant (left small button in screenshot) */
+    .btn-pill.outline {
+      background:transparent;
+      color:var(--accent);
+      border-color:var(--accent);
+    }
+
+    /* filled variant (right green button) */
+    .btn-pill.filled {
+      background:var(--accent);
+      color:#fff;
+      border-color:var(--accent);
+    }
+
+    .btn-pill:active { transform:translateY(1px); }
+
+    .small-note{ color:var(--muted); font-size:13px; margin-bottom:8px; text-align:right; }
   </style>
 </head>
 <body>
@@ -71,9 +87,11 @@
 
   <header class="top-nav">
     <nav>
-      <button class="pill">تقرير العمليات الشفت المسائي</button>
-      <!-- زر العودة إلى الموقع المطلوب -->
-      <a class="back-link" href="https://boletofsf.odoo.com/" target="_blank" rel="noopener noreferrer">العودة إلى الموقع</a>
+      <!-- العنوان كزر Outline نفس حجم زر العودة -->
+      <div class="btn-pill outline" aria-hidden="true">تقرير العمليات الشفت المسائي</div>
+
+      <!-- زر العودة بنفس الحجم والشكل (ملء أخضر) -->
+      <a class="btn-pill filled" href="https://boletofsf.odoo.com/" target="_blank" rel="noopener noreferrer">العودة إلى الموقع</a>
     </nav>
   </header>
 
@@ -338,132 +356,6 @@
           </div>
         </div>
 
-        <div class="section" id="specialForcesSection">
-          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">القوات الخاصة</h3>
-          <div id="specialForcesList">
-            <div class="row">
-              <label>قائد فرقة القوات الخاصة</label>
-              <input class="input role" data-role="قائد فرقة القوات الخاصة" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>نائب الفرقة</label>
-              <input class="input role" data-role="نائب الفرقة" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>حزم 1</label>
-              <input class="input role" data-role="حزم 1" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>رمح 1</label>
-              <input class="input role" data-role="رمح 1" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section" id="criminalSection">
-          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">البحث الجنائي</h3>
-          <div id="criminalList">
-            <div class="row">
-              <label>قائد فرقة البحث الجنائي</label>
-              <input class="input role" data-role="قائد فرقة البحث الجنائي" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>نائب الفرقة</label>
-              <input class="input role" data-role="نائب فرقة البحث الجنائي" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>جنائي 1</label>
-              <input class="input role" data-role="جنائي 1" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>جنائي 2</label>
-              <input class="input role" data-role="جنائي 2" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section" id="securitySection">
-          <h3 style="margin:0 0 8px;color:var(--accent);font-size:16px">الأمن والحماية</h3>
-          <div id="securityList">
-            <div class="row">
-              <label>حماية 1</label>
-              <input class="input role" data-role="حماية 1" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>حماية 2</label>
-              <input class="input role" data-role="حماية 2" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>حماية 3</label>
-              <input class="input role" data-role="حماية 3" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-            <div class="row">
-              <label>حماية 4</label>
-              <input class="input role" data-role="حماية 4" placeholder="H-000" value="H-000"/>
-              <div class="player-wrap">
-                <input type="checkbox" class="playerChk" title="لاعب معتمد">
-                <span class="playerLabel">لاعب</span>
-                <input class="playerMention" placeholder="@player" />
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div id="dupWarning">هناك أكواد مكررة — تم تمييزها باللون الأحمر</div>
 
         <div class="controls">
@@ -488,7 +380,7 @@
       chk.addEventListener('change', () => {
         if (chk.checked) {
           mention.style.display = 'inline-block';
-          codeInput.classList.remove('duplicate');
+          if (codeInput) codeInput.classList.remove('duplicate');
           const lbl = row.querySelector('label');
           if (lbl) lbl.classList.remove('duplicate-label');
         } else {
