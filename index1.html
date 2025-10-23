@@ -19,6 +19,7 @@
     .controls { display:flex; gap:8px; margin-top:10px; }
     .report-output { width:100%; min-height:220px; resize:vertical; padding:12px; background:#222; color:#ddd; border-radius:8px; border:1px solid rgba(255,255,255,0.03); white-space:pre-wrap; direction:rtl; }
     .del-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#ff6b6b; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; }
+    .edit-btn { background:transparent; border:1px dashed rgba(255,255,255,0.06); color:#ffd36b; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; }
     .role.duplicate { border-color:#e74c3c !important; color:#ffb3b3 !important; background:rgba(231,76,60,0.04); }
     .row label.duplicate-label { color:#ff6b6b !important; }
     #dupWarning { color:#ff6b6b; display:none; margin-top:8px; font-size:13px; }
@@ -41,6 +42,14 @@
 
     /* spacer row: visual gap in the form */
     .row.spacer { padding:0; margin:6px 0; }
+
+    /* compact controls for note area */
+    .note-controls { display:flex; gap:8px; align-items:center; width:100%; }
+    .note-controls select, .note-controls input { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:#222; color:#ddd; }
+    .note-controls .small { width:140px; }
+    .note-item { padding:6px 8px; border-radius:6px; background:rgba(255,255,255,0.02); display:flex; justify-content:space-between; align-items:center; }
+    .note-item span { color:#ddd; font-size:14px; }
+    .note-actions { display:flex; gap:6px; align-items:center; }
   </style>
 </head>
 <body>
@@ -60,7 +69,7 @@
 
       <form id="reportForm" onsubmit="return false;">
         <div class="section">
-          <!-- وقت الاستلام ثابت (الحقل موجود لكن سنمنع اضافة زر "لاعب" له) -->
+          <!-- وقت الاستلام ثابت (الحقل موجود لكن لا يوجد زر "لاعب" له) -->
           <div class="row">
             <label>وقت استلام الشفت</label>
             <input id="shiftTimeDisplay" class="input" value="6 صباحا" readonly />
@@ -95,7 +104,6 @@
           <div style="margin-top:10px;">
             <div class="row">
               <label>ضابط خفر</label>
-              <!-- تم تغيير القيمة الافتراضية إلى H-000 كما طلبت -->
               <input id="dhInput" class="input role" data-role="ضابط خفر" placeholder="H-000" value="H-000"/>
             </div>
           </div>
@@ -158,7 +166,7 @@
             </div>
           </div>
 
-          <!-- مجموعة "حرة (قابل للإضافة)" مع زر إضافة -->
+          <!-- حرة (قابل للإضافة) -->
           <div style="margin:12px 0;">
             <h4 style="margin:0 0 8px;color:#ccc;font-size:15px">حرة <span style="color:#9b9b9b;font-size:13px;margin-left:8px">(قابل للإضافة)</span></h4>
             <div id="huraList">
@@ -221,6 +229,39 @@
           </div>
         </div>
 
+        <!-- NOTES: moved to the end, under "الأمن والحماية" -->
+        <div class="section" id="notesSection">
+          <div class="row" style="margin-top:6px;">
+            <label>ملاحظة رئيسية</label>
+            <input id="noteField" class="input" value="مساندة الطوارئ" />
+          </div>
+
+          <div class="row" style="margin-top:8px;">
+            <label>إضافة بند للملاحظة</label>
+            <div class="note-controls" style="flex:1">
+              <input id="noteCode" class="input small" placeholder="مثال: H-018" />
+              <input id="noteCount" class="input small" placeholder="كم" />
+              <select id="noteType" class="small">
+                <option value="">نوع</option>
+                <option value="حرة">حرة</option>
+                <option value="سهم">سهم</option>
+                <option value="صقر">صقر</option>
+                <option value="برق">برق</option>
+                <option value="ردع">ردع</option>
+              </select>
+              <button type="button" id="addNoteBtn" class="add-btn" style="padding:6px 8px">＋ إضافة</button>
+            </div>
+          </div>
+
+          <div class="row" style="align-items:flex-start;">
+            <label>ملاحظات مضافة</label>
+            <div id="notesList" style="flex:1;display:flex;flex-direction:column;gap:6px">
+              <!-- عناصر الملاحظة تظهر هنا -->
+            </div>
+          </div>
+        </div>
+        <!-- END NOTES -->
+
         <div id="dupWarning">هناك أكواد مكررة — تم تمييزها باللون الأحمر</div>
 
         <div class="controls">
@@ -240,40 +281,26 @@
     const EXCLUDED_LABELS = [
       'قائد امن المنشأت',
       'نائب قائد امن المنشأت',
-      'وقت استلام الشفت' // تم استبعاد صف وقت الاستلام من الحصول على زر "لاعب"
+      'وقت استلام الشفت' // exclude shift row
     ];
-    // labels that start with this prefix should be excluded (قيادة ...)
     const EXCLUDE_PREFIXES = ['قيادة'];
+    const EXCLUDED_INPUT_IDS = ['operations', 'opsDeputy', 'shiftTimeDisplay', 'noteField', 'noteCode', 'noteCount', 'noteType'];
 
-    // IDs of inputs that should never have player checkbox
-    const EXCLUDED_INPUT_IDS = ['operations', 'opsDeputy', 'shiftTimeDisplay'];
-
-    // add player-wrap (checkbox + mention) to a given .row if allowed
     function addPlayerWrapToRowIfAllowed(row) {
       if (!row || !(row instanceof HTMLElement)) return;
-      if (row.querySelector('.player-wrap')) return; // already present
-
-      // detect label text (if any) and input id/data-role
+      if (row.querySelector('.player-wrap')) return;
       const lblEl = row.querySelector('label');
       const labelText = lblEl ? (lblEl.textContent || '').trim() : '';
-      const roleInput = row.querySelector('input.role');
-
-      // if there's any input with an excluded id, don't add
       const inputs = Array.from(row.querySelectorAll('input'));
       for (const inp of inputs) {
         if (inp.id && EXCLUDED_INPUT_IDS.includes(inp.id)) return;
       }
-      // exclude by explicit labels
       if (EXCLUDED_LABELS.includes(labelText)) return;
-      // exclude "قيادة ..." prefix
       for (const p of EXCLUDE_PREFIXES) {
         if (labelText.startsWith(p)) return;
       }
-
-      // Also exclude if the label is 'العمليات' or 'نائب العمليات'
       if (labelText === 'العمليات' || labelText === 'نائب العمليات') return;
 
-      // At this point we allow adding the player controls
       const playerWrap = document.createElement('div');
       playerWrap.className = 'player-wrap';
       const chk = document.createElement('input'); chk.type = 'checkbox'; chk.className = 'playerChk'; chk.title = 'لاعب معتمد';
@@ -283,22 +310,18 @@
       playerWrap.appendChild(span);
       playerWrap.appendChild(mention);
 
-      // insert before any existing delete button if present, otherwise append
       const delBtn = row.querySelector('.del-btn');
       if (delBtn) row.insertBefore(playerWrap, delBtn);
       else row.appendChild(playerWrap);
 
-      // bind events for the newly created controls
       bindPlayerToggle(row);
     }
 
-    // Helper: show/hide player mention input when checkbox toggled
     function bindPlayerToggle(row) {
       const chk = row.querySelector('.playerChk');
       const mention = row.querySelector('.playerMention');
       const codeInput = row.querySelector('.role');
       if (!chk || !mention) return;
-      // avoid double-binding
       if (chk.dataset.bound === '1') return;
       chk.addEventListener('change', () => {
         if (chk.checked) {
@@ -322,34 +345,23 @@
       input.dataset.listenerAttached = '1';
     }
 
-    // Attach listeners and add player-wraps where appropriate on initial load
     document.querySelectorAll('.row').forEach(row => {
       const roleInp = row.querySelector('.role');
       if (roleInp) attachRoleListener(roleInp);
     });
 
-    // Add player checkbox to all eligible rows (initial pass)
     function addPlayerToAllEligibleRows() {
       document.querySelectorAll('.row').forEach(row => addPlayerWrapToRowIfAllowed(row));
-      // ensure top-level operations and shift rows are not given player (explicitly remove if present)
       const opRow = document.getElementById('operations') ? document.getElementById('operations').closest('.row') : null;
       const deputyRow = document.getElementById('opsDeputy') ? document.getElementById('opsDeputy').closest('.row') : null;
       const shiftRow = document.getElementById('shiftTimeDisplay') ? document.getElementById('shiftTimeDisplay').closest('.row') : null;
-      if (opRow) {
-        const pw = opRow.querySelector('.player-wrap');
-        if (pw) pw.remove();
-      }
-      if (deputyRow) {
-        const pw = deputyRow.querySelector('.player-wrap');
-        if (pw) pw.remove();
-      }
-      if (shiftRow) {
-        const pw = shiftRow.querySelector('.player-wrap');
-        if (pw) pw.remove(); // هنا: أزلنا زر "لاعب" من صف وقت الاستلام
-      }
+      const noteRow = document.getElementById('noteField') ? document.getElementById('noteField').closest('.row') : null;
+      if (opRow) { const pw = opRow.querySelector('.player-wrap'); if (pw) pw.remove(); }
+      if (deputyRow) { const pw = deputyRow.querySelector('.player-wrap'); if (pw) pw.remove(); }
+      if (shiftRow) { const pw = shiftRow.querySelector('.player-wrap'); if (pw) pw.remove(); }
+      if (noteRow) { const pw = noteRow.querySelector('.player-wrap'); if (pw) pw.remove(); }
     }
 
-    // createRow used by add buttons
     function createRow(labelText, dataRole, targetId) {
       const row = document.createElement('div');
       row.className = 'row';
@@ -360,23 +372,18 @@
       input.setAttribute('data-role', dataRole);
       input.placeholder = 'H-000';
       input.value = 'H-000';
-
       const del = document.createElement('button'); del.type = 'button'; del.className = 'del-btn'; del.textContent = 'حذف';
       del.addEventListener('click', () => { row.remove(); checkDuplicates(); });
-
       row.appendChild(label);
       row.appendChild(input);
       row.appendChild(del);
-
       attachRoleListener(input);
-      // add player-wrap if allowed for this new row
       addPlayerWrapToRowIfAllowed(row);
-
       return row;
     }
 
     document.querySelectorAll('.add-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
         const targetId = btn.getAttribute('data-target');
         const list = document.getElementById(targetId);
         if (!list) return;
@@ -432,7 +439,6 @@
       muts.forEach(m => {
         m.addedNodes.forEach(node => {
           if (!(node instanceof HTMLElement)) return;
-          // ensure newly added rows get player-wrap if allowed and have listeners attached
           node.querySelectorAll && node.querySelectorAll('.role').forEach(attachRoleListener);
           node.querySelectorAll && node.querySelectorAll('.row').forEach(r => {
             addPlayerWrapToRowIfAllowed(r);
@@ -443,17 +449,137 @@
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
+    // --- Notes handling (new) ---
+    const addNoteBtn = document.getElementById('addNoteBtn');
+    const notesList = document.getElementById('notesList');
+
+    function createNoteItem(code, count, type) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'note-item';
+      wrapper.dataset.code = code || '';
+      wrapper.dataset.count = count || '';
+      wrapper.dataset.type = type || '';
+      wrapper.dataset.edited = 'false';
+
+      const txt = document.createElement('span');
+      txt.textContent = formatNoteText(code, count, type, false);
+
+      const actions = document.createElement('div');
+      actions.className = 'note-actions';
+
+      const edit = document.createElement('button');
+      edit.type = 'button';
+      edit.className = 'edit-btn';
+      edit.textContent = 'تعديل';
+      edit.addEventListener('click', () => enterEditMode(wrapper, txt));
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'del-btn';
+      del.textContent = 'حذف';
+      del.addEventListener('click', () => wrapper.remove());
+
+      actions.appendChild(edit);
+      actions.appendChild(del);
+
+      wrapper.appendChild(txt);
+      wrapper.appendChild(actions);
+      return wrapper;
+    }
+
+    function formatNoteText(code, count, type, edited) {
+      if (!code && !count && !type) return '';
+      let parts = [];
+      if (code) parts.push(code + ':');
+      if (count) parts.push(count);
+      if (type) parts.push(type);
+      let res = parts.join(' ');
+      if (edited) res += ' (edited)';
+      return res;
+    }
+
+    function enterEditMode(wrapper, txtSpan) {
+      // create inline inputs to edit
+      const code = wrapper.dataset.code || '';
+      const count = wrapper.dataset.count || '';
+      const type = wrapper.dataset.type || '';
+
+      // build editor
+      const editor = document.createElement('div');
+      editor.style.display = 'flex';
+      editor.style.gap = '8px';
+      editor.style.alignItems = 'center';
+
+      const codeIn = document.createElement('input');
+      codeIn.className = 'input small';
+      codeIn.value = code;
+      codeIn.placeholder = 'H-914';
+
+      const countIn = document.createElement('input');
+      countIn.className = 'input small';
+      countIn.value = count;
+      countIn.placeholder = 'كم';
+
+      const typeSel = document.createElement('select');
+      typeSel.className = 'small';
+      ['','حرة','سهم','صقر','برق','ردع'].forEach(v => {
+        const o = document.createElement('option'); o.value = v; o.textContent = v || 'نوع';
+        if (v === type) o.selected = true;
+        typeSel.appendChild(o);
+      });
+
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.className = 'add-btn';
+      save.textContent = 'حفظ';
+      save.addEventListener('click', () => {
+        wrapper.dataset.code = codeIn.value.trim();
+        wrapper.dataset.count = countIn.value.trim();
+        wrapper.dataset.type = typeSel.value;
+        wrapper.dataset.edited = 'true';
+        txtSpan.textContent = formatNoteText(wrapper.dataset.code, wrapper.dataset.count, wrapper.dataset.type, true);
+        editor.replaceWith(txtSpan);
+      });
+
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'del-btn';
+      cancel.textContent = 'إلغاء';
+      cancel.addEventListener('click', () => {
+        editor.replaceWith(txtSpan);
+      });
+
+      // replace text span with editor
+      txtSpan.replaceWith(editor);
+      editor.appendChild(codeIn);
+      editor.appendChild(countIn);
+      editor.appendChild(typeSel);
+      editor.appendChild(save);
+      editor.appendChild(cancel);
+    }
+
+    addNoteBtn.addEventListener('click', () => {
+      const code = document.getElementById('noteCode').value.trim();
+      const count = document.getElementById('noteCount').value.trim();
+      const type = document.getElementById('noteType').value;
+      if (!code && !count && !type) return; // nothing to add
+      const item = createNoteItem(code, count, type);
+      notesList.appendChild(item);
+      // clear inputs for convenience
+      document.getElementById('noteCode').value = '';
+      document.getElementById('noteCount').value = '';
+    });
+
+    // Append container helper unchanged
     function appendFromContainer(containerId, out, addBlankAfter = true) {
       const container = document.getElementById(containerId);
       if (!container) return;
       const rows = container.querySelectorAll('.row');
       rows.forEach(row => {
-        // if this row is a spacer, insert a blank line in the output
         if (row.classList && row.classList.contains('spacer')) {
           out.push('');
           return;
         }
-
         const roleName = (row.querySelector('label') || {}).textContent || '';
         const codeInput = row.querySelector('.role');
         const playerChk = row.querySelector('.playerChk');
@@ -467,13 +593,11 @@
         } else if (codeInput) {
           val = (codeInput.value && codeInput.value.trim()) ? codeInput.value.trim() : 'H-000';
         }
-
         if (roleName) out.push(roleName + ' : ' + val);
       });
       if (addBlankAfter) out.push('');
     }
 
-    // coastal simple: عين, ساحل, سجن with gaps
     function appendCoastalWithGaps(out) {
       const container = document.getElementById('coastalList');
       if (!container) return;
@@ -497,7 +621,6 @@
         out.push(roleName + ' : ' + val);
       });
       if (ayn.length) out.push('');
-
       sah.forEach(row => {
         const roleName = (row.querySelector('label')||{}).textContent || '';
         const codeInput = row.querySelector('.role');
@@ -513,7 +636,6 @@
         out.push(roleName + ' : ' + val);
       });
       if (sah.length) out.push('');
-
       sijn.forEach(row => {
         const roleName = (row.querySelector('label')||{}).textContent || '';
         const codeInput = row.querySelector('.role');
@@ -530,7 +652,7 @@
       });
     }
 
-    // build report tuned to the requested output example
+    // build report: notes will be appended at the END only if there are added notes
     function buildReportText() {
       checkDuplicates();
       const out = [];
@@ -561,7 +683,7 @@
       // قيادة 1/2
       appendFromContainer('leadershipList', out);
 
-      // ضابط خفر (default H-000 now)
+      // ضابط خفر
       const dh = document.querySelector('input[data-role="ضابط خفر"]');
       if (dh) {
         const row = dh.closest('.row');
@@ -576,22 +698,18 @@
         out.push('');
       }
 
-      // ردع
+      // وحدات
       appendFromContainer('radaList', out);
-
-      // برق
       appendFromContainer('barqList', out);
-
-      // سهم
       appendFromContainer('sahmList', out);
 
       // مشرفو الأمن وفرقهم
       appendFromContainer('securitySupervisors', out);
 
-      // حرة 1..n
+      // حرة
       appendFromContainer('huraList', out);
 
-      // صقر 1..2
+      // صقر
       appendFromContainer('saqrList', out);
 
       // شرطة عسكرية
@@ -609,7 +727,7 @@
         out.push('');
       }
 
-      // البحث الجنائي (as heading)
+      // البحث الجنائي
       out.push('البحث الجنائي');
       appendFromContainer('criminalList', out);
 
@@ -623,8 +741,34 @@
       out.push('الأمن والحماية');
       appendFromContainer('securityList', out);
 
-      // coastal groups with gaps
+      // coastal groups
       appendCoastalWithGaps(out);
+
+      // --- Append notes at the end ONLY if there are added notes ---
+      const noteItems = Array.from(document.querySelectorAll('#notesList .note-item'));
+      if (noteItems.length > 0) {
+        const mainNote = (document.getElementById('noteField').value || '').trim();
+        out.push('');
+        out.push('ملاحظات التقرير :');
+        if (mainNote) {
+          out.push(mainNote + ' :');
+        }
+        noteItems.forEach(it => {
+          const code = it.dataset.code || '';
+          const count = it.dataset.count || '';
+          const type = it.dataset.type || '';
+          const edited = it.dataset.edited === 'true';
+          let lineParts = [];
+          if (code) lineParts.push(code + ':');
+          if (count) lineParts.push(count);
+          if (type) lineParts.push(type);
+          let line = lineParts.join(' ');
+          if (line) {
+            if (edited) line += ' (edited)';
+            out.push(line);
+          }
+        });
+      }
 
       // trim trailing blank lines
       while (out.length && out[out.length - 1] === '') out.pop();
@@ -654,9 +798,8 @@
       }
     });
 
-    // initial setup: add player checkbox to all eligible rows and attach listeners
+    // initial setup
     addPlayerToAllEligibleRows();
-    // initial duplicate check pass
     checkDuplicates();
   </script>
 </body>
