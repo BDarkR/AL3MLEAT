@@ -494,7 +494,6 @@
       const opsDeputy = rawOpsDeputy ? (rawOpsDeputy.startsWith('@') ? rawOpsDeputy : ('@' + rawOpsDeputy)) : '@';
 
       out.push('العمليات : ' + operations);
-      out.push('');
       out.push('نائب العمليات : ' + opsDeputy);
       out.push('');
 
@@ -553,16 +552,19 @@
         out.push('');
       }
 
-      // القوات الخاصة
+      // القوات الخاصة (أضفت سطر فارغ بعد العنوان)
       out.push('القوات الخاصة');
+      out.push('');
       appendFromContainer('specialForcesList', out);
 
-      // البحث الجنائي
+      // البحث الجنائي (أضفت سطر فارغ بعد العنوان)
       out.push('البحث الجنائي');
+      out.push('');
       appendFromContainer('criminalList', out);
 
-      // الأمن والحماية
+      // الأمن والحماية (أضفت سطر فارغ بعد العنوان — يفصل عن 'حماية 1')
       out.push('الأمن والحماية');
+      out.push('');
       appendFromContainer('securityList', out);
 
       // coastal: عين / ساحل / سجن with gaps between groups
@@ -601,4 +603,3 @@
   </script>
 </body>
 </html>
-
